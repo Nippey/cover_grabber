@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 import urllib
 from cover_grabber.handler.handler_factory import HandlerFactory
 from cover_grabber.downloader.lastfm_downloader import LastFMDownloader
@@ -30,7 +31,11 @@ class MediaDirWalker(object):
         """ Walk specified directory recursively.  Call self.process_dir() on each directory """
 
         logger.info(u'Scanning {path}'.format(path=self.path))
-        os.path.walk(self.path, self.process_dir, None)
+        if sys.version < '3':
+            os.path.walk(self.path, self.process_dir, None)
+        else:
+            for (root, dirs, files) in os.walk(self.path):
+                self.process_dir(None, root, files)
 
     def process_dir(self, args, dirname, filenames):
         """ callback for each directory encourted by os.path.walk.
