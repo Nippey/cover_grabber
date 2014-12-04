@@ -14,6 +14,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import urllib
+import sys
+PY3 = sys.version_info >= (3,)
+
 try:
     import xml.etree.cElementTree as ETree
 except:
@@ -32,9 +35,15 @@ class LastFMDownloader(object):
         self.artist_name = artist_name
         self.url = self.format_url()
 
+    def str_encode(self, str):
+        if PY3:
+            return str
+        else:
+            return str.encode('utf8')
+            
     def format_url(self):
         """ Sanitize and format URL for Last FM search """
-        return self.LASTFM_URL.format(album_name=self.album_name.encode('utf8'))
+        return self.LASTFM_URL.format(album_name=urllib.quote(self.str_encode(self.album_name)))
 
 
     def search_for_image(self):
@@ -45,7 +54,7 @@ class LastFMDownloader(object):
         xml_data = ETree.fromstring(response) # Read in XML data
 
         for element in xml_data.getiterator("album"):
-            if (element.find('artist').text.lower() == self.artist_name.lower().encode("utf-8")):
+            if (element.find('artist').text.lower() == self.str_encode(self.artist_name.lower())):
                 for elmnt in element.findall('image'):
                     if (elmnt.attrib['size'] == 'extralarge'):
                         url = elmnt.text

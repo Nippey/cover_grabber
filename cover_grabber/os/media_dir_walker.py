@@ -20,6 +20,8 @@ from cover_grabber.handler.handler_factory import HandlerFactory
 from cover_grabber.downloader.lastfm_downloader import LastFMDownloader
 from cover_grabber.logging.config import logger
 
+PY3 = sys.version_info >= (3,)
+
 class MediaDirWalker(object):
     def __init__(self, path, overwrite = False):
         """ Initialize Media directory walker object"""
@@ -31,11 +33,11 @@ class MediaDirWalker(object):
         """ Walk specified directory recursively.  Call self.process_dir() on each directory """
 
         logger.info(u'Scanning {path}'.format(path=self.path))
-        if sys.version < '3':
-            os.path.walk(self.path, self.process_dir, None)
-        else:
+        if PY3:
             for (root, dirs, files) in os.walk(self.path):
                 self.process_dir(None, root, files)
+        else:
+            os.path.walk(self.path, self.process_dir, None)
 
     def process_dir(self, args, dirname, filenames):
         """ callback for each directory encourted by os.path.walk.
@@ -126,6 +128,6 @@ class MediaDirWalker(object):
         """ Download album cover art and save as cover.(png|jpg|gif|tiff|svg)"""
 
         image_data = urllib.urlopen(image_url).read()
-        f = open(os.path.join(dirname, cover_name), 'w')
+        f = open(os.path.join(dirname, cover_name), 'wb')
         f.write(image_data)
         f.close()
