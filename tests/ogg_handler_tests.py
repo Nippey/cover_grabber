@@ -1,5 +1,6 @@
 import os
 import shutil
+import unittest
 from nose.tools import *
 from cover_grabber.handler.ogg_handler import OGGHandler
 
@@ -13,11 +14,14 @@ ogg_file = os.path.join(ogg_path, ogg_filename)
 
 ogg_handler = OGGHandler(ogg_path, [ogg_filename])
 
-def test_ogg_handler_init():
-    assert(ogg_handler)
 
-def test_ogg_can_get_album_and_artist_tag():
-    tags = ogg_handler.get_album_and_artist()
-    assert(tags)
+class ogg_handler_tests(unittest.TestCase):
+
+    def test_ogg_handler_init(self):
+        assert(ogg_handler)
+
+    def test_ogg_can_get_album_and_artist_tag(self):
+        tags = ogg_handler.get_album_and_artist()
+        assert(tags)
 
 

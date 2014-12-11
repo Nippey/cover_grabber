@@ -19,14 +19,10 @@ import cover_grabber
 import sys
 
 extra = {}
-install_requires = {}
 
 if sys.version_info >= (3,):
     extra['use_2to3'] = True
-    #extra['convert_2to3_doctests'] = ['src/your/module/README.txt']
-    extra['install_requires'] = ['mutagenx']   #mutagen is not yet ported to Py3k. Progress is ongoing ("pip3.2 install mutagen" fails currently
-else:
-    extra['install_requires'] = ['mutagen']
+    #extra['convert_2to3_doctests'] = ['tests/media_dir_walker_tests.py']
 
 setup(name='cover_grabber',
       version=cover_grabber.COVER_GRABBER_VERSION,
@@ -44,5 +40,7 @@ setup(name='cover_grabber',
       },
       #install_requires = ['mutagenx'],
       license = "GNU GPL v3",
+      test_suite = 'tests',
+      extra['install_requires'] = ['mutagen']
       **extra
 )
