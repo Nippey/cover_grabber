@@ -34,7 +34,7 @@ class LastFMDownloader(object):
 
     def format_url(self):
         """ Sanitize and format URL for Last FM search """
-        return self.LASTFM_URL.format(album_name=self.album_name.encode('utf8'))
+        return self.LASTFM_URL.format(album_name=urllib.quote(self.album_name.encode('utf8')))
 
 
     def search_for_image(self):
